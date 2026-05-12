@@ -58,6 +58,7 @@ export default function MovimientosPage() {
   const sp = useSearchParams();
   const categories = useCategories();
   const [editing, setEditing] = useState<Movement | null>(null);
+  const [duplicating, setDuplicating] = useState<Movement | null>(null);
 
   const filters = useMemo(() => {
     const from = sp.get("from") ?? undefined;
@@ -295,6 +296,11 @@ export default function MovimientosPage() {
                               Editar
                             </DropdownMenuItem>
                             <DropdownMenuItem
+                              onClick={() => setDuplicating(m)}
+                            >
+                              Duplicar
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
                               className="text-destructive focus:text-destructive"
                               onClick={() => {
                                 if (confirm("¿Eliminar este movimiento?")) {
@@ -351,6 +357,11 @@ export default function MovimientosPage() {
         editing={editing}
         open={!!editing}
         onOpenChange={(o) => !o && setEditing(null)}
+      />
+      <MovementDialog
+        prefill={duplicating}
+        open={!!duplicating}
+        onOpenChange={(o) => !o && setDuplicating(null)}
       />
     </>
   );

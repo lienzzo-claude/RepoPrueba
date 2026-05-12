@@ -1,19 +1,33 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
+import { MoreHorizontal } from "lucide-react";
 
+import { MovementDialog } from "@/components/movement-dialog";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useMovements } from "@/hooks/use-movements";
+import { useDeleteMovement, useMovements } from "@/hooks/use-movements";
 import { formatCurrency, formatDate } from "@/lib/format";
+import type { Movement } from "@/lib/validations/movements";
 
 export function RecentMovements() {
   const { data, isLoading } = useMovements({ page: 1, pageSize: 6 });
+  const del = useDeleteMovement();
+  const [editing, setEditing] = useState<Movement | null>(null);
+  const [duplicating, setDuplicating] = useState<Movement | null>(null);
 
   return (
     <Card>
@@ -65,21 +79,59 @@ export function RecentMovements() {
                     </div>
                   </div>
                 </div>
-                <div
-                  className={`shrink-0 text-sm font-semibold tabular-nums ${
-                    m.type === "INGRESO"
-                      ? "text-emerald-600"
-                      : "text-rose-600"
-                  }`}
-                >
-                  {m.type === "INGRESO" ? "+" : "−"}
-                  {formatCurrency(m.amount)}
+                <div className="flex shrink-0 items-center gap-1">
+                  <div
+                    className={`text-sm font-semibold tabular-nums ${
+                      m.type === "INGRESO"
+                        ? "text-emerald-600"
+                        : "text-rose-600"
+                    }`}
+                  >
+                    {m.type === "INGRESO" ? "+" : "−"}
+                    {formatCurrency(m.amount)}
+                  </div>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger
+                      render={<Button variant="ghost" size="icon" />}
+                    >
+                      <MoreHorizontal className="h-4 w-4" />
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem onClick={() => setEditing(m)}>
+                        Editar
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => setDuplicating(m)}>
+                        Duplicar
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        className="text-destructive focus:text-destructive"
+                        onClick={() => {
+                          if (confirm("¿Eliminar este movimiento?")) {
+                            del.mutate(m.id);
+                          }
+                        }}
+                      >
+                        Eliminar
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </div>
               </li>
             ))}
           </ul>
         )}
       </CardContent>
+
+      <MovementDialog
+        editing={editing}
+        open={!!editing}
+        onOpenChange={(o) => !o && setEditing(null)}
+      />
+      <MovementDialog
+        prefill={duplicating}
+        open={!!duplicating}
+        onOpenChange={(o) => !o && setDuplicating(null)}
+      />
     </Card>
   );
 }

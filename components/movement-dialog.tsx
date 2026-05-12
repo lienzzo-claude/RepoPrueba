@@ -44,14 +44,14 @@ type FormState = {
   date: string;
 };
 
-function initialForm(editing: Movement | null | undefined): FormState {
-  if (editing) {
+function initialForm(source: Movement | null | undefined): FormState {
+  if (source) {
     return {
-      type: editing.type,
-      concept: editing.concept,
-      amount: String(editing.amount),
-      category_id: editing.category_id,
-      date: editing.date.slice(0, 10),
+      type: source.type,
+      concept: source.concept,
+      amount: String(source.amount),
+      category_id: source.category_id,
+      date: source.date.slice(0, 10),
     };
   }
   return {
@@ -65,17 +65,28 @@ function initialForm(editing: Movement | null | undefined): FormState {
 
 type Props = {
   editing?: Movement | null;
+  prefill?: Movement | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
 };
 
-function MovementForm({ editing, onClose }: { editing?: Movement | null; onClose: () => void }) {
+function MovementForm({
+  editing,
+  prefill,
+  onClose,
+}: {
+  editing?: Movement | null;
+  prefill?: Movement | null;
+  onClose: () => void;
+}) {
   const categories = useCategories();
   const create = useCreateMovement();
   const update = useUpdateMovement();
   const isEditing = !!editing;
 
-  const [form, setForm] = useState<FormState>(() => initialForm(editing));
+  const [form, setForm] = useState<FormState>(() =>
+    initialForm(editing ?? prefill ?? null),
+  );
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const submitting = create.isPending || update.isPending;
@@ -251,25 +262,38 @@ function MovementForm({ editing, onClose }: { editing?: Movement | null; onClose
   );
 }
 
-export function MovementDialog({ editing, open, onOpenChange }: Props) {
+export function MovementDialog({
+  editing,
+  prefill,
+  open,
+  onOpenChange,
+}: Props) {
   const isEditing = !!editing;
+  const isDuplicating = !isEditing && !!prefill;
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>
-            {isEditing ? "Editar movimiento" : "Nuevo movimiento"}
+            {isEditing
+              ? "Editar movimiento"
+              : isDuplicating
+                ? "Duplicar movimiento"
+                : "Nuevo movimiento"}
           </DialogTitle>
           <DialogDescription>
             {isEditing
               ? "Actualiza los datos del movimiento."
-              : "Registra un ingreso o un gasto."}
+              : isDuplicating
+                ? "Revisa los datos y guarda como un nuevo movimiento."
+                : "Registra un ingreso o un gasto."}
           </DialogDescription>
         </DialogHeader>
         {open && (
           <MovementForm
-            key={editing?.id ?? "new"}
+            key={editing?.id ?? (prefill ? `dup-${prefill.id}` : "new")}
             editing={editing}
+            prefill={prefill}
             onClose={() => onOpenChange(false)}
           />
         )}
