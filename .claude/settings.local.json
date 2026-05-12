@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install *)",
+      "Bash(npm run *)",
+      "Read(//c/Users/PABLO_~1/AppData/Local/Temp/claude/C--Users-pablo-wdm32su-OneDrive-Escritorio-REPOPRUEBA-RepoPrueba/bc7f6dce-ab22-4877-8981-ceee416e453d/tasks/**)"
+    ]
+  }
+}
