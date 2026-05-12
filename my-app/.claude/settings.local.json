@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell($env:NODE_TLS_REJECT_UNAUTHORIZED = \"0\"; npx --yes @better-auth/cli@latest migrate -y)",
+      "PowerShell(npm install *)",
+      "PowerShell(npx tsx scripts/check-tables.ts)",
+      "Bash(npx *)",
+      "Bash(curl -sS -o /dev/null -w \"/ HTTP %{http_code}\\\\n\" http://localhost:3000/)",
+      "Bash(curl -sS -o /dev/null -w \"/sign-in HTTP %{http_code}\\\\n\" http://localhost:3000/sign-in)"
+    ]
+  }
+}
