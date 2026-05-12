@@ -18,6 +18,7 @@ Construida con **Next.js 16** (App Router + Turbopack), **PostgreSQL** sobre **N
 - [Modelo de datos](#modelo-de-datos)
 - [API REST](#api-rest)
 - [Despliegue](#despliegue)
+- [Roadmap](#roadmap)
 - [Licencia](#licencia)
 
 ---
@@ -201,6 +202,47 @@ El proyecto está preparado para desplegarse en cualquier plataforma compatible 
 2. Configura las variables de entorno (`DATABASE_URL`, `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL`).
 3. Asegúrate de que `BETTER_AUTH_URL` apunta al dominio de producción.
 4. Despliega — Vercel ejecutará `next build` automáticamente.
+
+---
+
+## Roadmap
+
+Funcionalidades en desarrollo o previstas para futuras versiones.
+
+### Corto plazo
+
+- [ ] **Exportación de datos** a CSV y Excel desde el listado de movimientos.
+- [ ] **Importación masiva** de movimientos desde CSV / extracto bancario.
+- [ ] **Recuperación de contraseña** por correo electrónico.
+- [ ] **Edición de categorías** desde el listado (color, icono, nombre).
+- [ ] **Confirmación visual** al eliminar (sustituir `confirm()` nativo por diálogo accesible).
+
+### Medio plazo
+
+- [ ] **Presupuestos por categoría** con alertas al superar el límite mensual.
+- [ ] **Movimientos recurrentes** (nóminas, suscripciones, alquiler) con generación automática.
+- [ ] **Etiquetas** complementarias a las categorías para filtrado cruzado.
+- [ ] **Múltiples cuentas / monederos** (efectivo, banco, tarjeta…).
+- [ ] **Adjuntos** en movimientos (tickets, facturas) con almacenamiento en S3 / R2.
+- [ ] **OAuth** con Google y GitHub mediante BetterAuth.
+
+### Largo plazo
+
+- [ ] **Soporte multi-divisa** con tipos de cambio históricos.
+- [ ] **Internacionalización (i18n)**: inglés y otros idiomas.
+- [ ] **PWA** instalable con soporte offline básico.
+- [ ] **Aplicación móvil** nativa (React Native / Expo) compartiendo la API.
+- [ ] **Informes avanzados**: cash-flow, proyecciones, comparativas año vs. año.
+- [ ] **Compartir cuentas** entre varios usuarios (parejas, familia).
+
+### Calidad y mantenimiento
+
+- [ ] Pruebas unitarias (Vitest) y end-to-end (Playwright).
+- [ ] Pipeline de CI con lint, typecheck, build y tests.
+- [ ] Telemetría de errores (Sentry) y métricas de uso.
+- [ ] Migraciones gestionadas (Drizzle Kit o `node-pg-migrate`).
+
+> ¿Echas algo en falta? Abre una *issue* en el repositorio describiendo tu propuesta.
 
 ---
 
